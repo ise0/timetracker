@@ -1,0 +1,362 @@
+openapi: 3.0.3
+info:
+  title: People info
+  version: 0.0.1
+servers:
+  - url: http://localhost:8000/api
+paths:
+  /task:
+    post:
+      tags: 
+        - task
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required: 
+                - taskName
+                - executor
+              type: object
+              properties:
+                taskName:
+                  type: string
+                  example: make coffee
+                executor:
+                  type: integer
+                  example: 1
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                required: 
+                  - taskId
+                type: object
+                properties:
+                  taskId: 
+                    type: integer
+                    example: 1
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+    patch:
+      tags: 
+        - task
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required: 
+                - taskId
+              type: object
+              properties:
+                taskId:
+                  type: integer
+                  example: 1
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: string
+                example: success
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+  /info:
+    get:
+      tags: 
+        - user
+      parameters:
+        - name: passportSerie
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 1234
+        - name: passportNumber
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 567890
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/People'
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+  /user:
+    post:
+      tags: 
+        - user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required: 
+                - name
+                - surname
+                - address
+                - passportNumber
+              type: object
+              properties:
+                surname:
+                  type: string
+                  example: Иванов
+                name:
+                  type: string
+                  example: Иван
+                patronymic:
+                  type: string
+                  example: Иванович
+                address:
+                  type: string
+                  example: г. Москва, ул. Ленина, д. 5, кв. 1
+                passportNumber:
+                  type: string
+                  example: 1234 567890
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                required: 
+                  - userId
+                type: object
+                properties:
+                  userId: 
+                    type: integer
+                    example: 1
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+    patch:
+      tags: 
+        - user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required: 
+                - userId
+                - name
+                - surname
+                - patronymic
+                - address 
+                - passportNumber
+                - nameUpdate
+                - surnameUpdate
+                - patronymicUpdate
+                - addressUpdate 
+                - passportNumberUpdate
+              type: object
+              properties:
+                userId:
+                  type: integer
+                  example: 1
+                surname:
+                  type: string
+                  example: Иванова
+                name:
+                  type: string
+                  example: Ивана
+                patronymic:
+                  type: string
+                  example: Ивановна
+                address:
+                  type: string
+                  example: г. Москва, ул. Ленина, д. 5, кв. 2
+                passportNumber:
+                  type: string
+                  example: 1234 567891
+                surnameUpdate:
+                  type: boolean
+                  example: true
+                nameUpdate:
+                  type: boolean
+                  example: true
+                patronymicUpdate:
+                  type: boolean
+                  example: true
+                addressUpdate:
+                  type: boolean
+                  example: true
+                passportNumberUpdate:
+                  type: boolean
+                  example: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "success"
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+    delete:
+      tags: 
+        - user
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "success"
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+  /user-stat:
+    get:
+      tags: 
+        - user
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: object
+                  properties: 
+                    taskId:
+                      type: integer
+                      example: 1
+                    taskName:
+                      type: string
+                      example: "make coffee"
+                    spentTime:
+                      type: string
+                      example: "2s"
+                    completed:
+                      type: boolean
+                    
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+  /users:
+    get:
+      tags: 
+        - user
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+        - name: show
+          in: query
+          schema:
+            type: integer
+        - name: userId
+          in: query
+          schema:
+            type: array
+            items:
+              type: integer
+        - name: userName
+          in: query
+          schema:
+            type: string
+        - name: surname
+          in: query
+          schema:
+            type: string
+        - name: patronymic
+          in: query
+          schema:
+            type: string
+        - name: address
+          in: query
+          schema:
+            type: string
+        - name: passport
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: object
+                  properties: 
+                    userId:
+                      type: integer
+                      example: 1
+                    userName:
+                      type: string
+                      example: "Иван"
+                    surname:
+                      type: string
+                      example: "Иванов"
+                    patronymic:
+                      type: string
+                      example: "Иванович"
+                    passportNumber:
+                      type: string
+                      example: "1234 567890"
+                    address:
+                      type: string
+                      example: "г. Москва, ул. Ленина, д. 5, кв. 1"
+                    
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+components:
+  schemas:
+    People:
+      required:
+        - surname
+        - name
+        - address
+      type: object
+      properties:
+        surname:
+          type: string
+          example: Иванов
+        name:
+          type: string
+          example: Иван
+        patronymic:
+          type: string
+          example: Иванович
+        address:
+          type: string
+          example: г. Москва, ул. Ленина, д. 5, кв. 1
